@@ -32,11 +32,12 @@ void insert_sort(int numbers[], int count)
             if (numbers[j] > temp){
                 //只要前面的值有大于temp的就将numbers[j]往后移动一个位置
                 numbers[j+1] = numbers[j];
+                numbers[j] = temp;
             }
             else{
                 break;
             }
         }
-        numbers[j+1] = temp;
+        //numbers[j+1] = temp;
     }
 }
