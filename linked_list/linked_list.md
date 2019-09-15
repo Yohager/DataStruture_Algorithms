@@ -82,10 +82,75 @@ ListNode *locate_elem_linklist(ListNode *list, int elem);
 //在单链表中的第i个数据元素的位置插入新元素e
 void insert_elem_linklist(ListNode **ptr, int i, int elem);
 //删除单链表中的第i个元素并将其值保存在elem中
-void delete_elem_linklist(ListNode **ptr, int i, int elem);
+void delete_elem_linklist(ListNode **ptr, int i, int *elem);
 //遍历单链表中的所有元素并打印出来
 void traverse_linklist(ListNode *list);
 ```
 
 对于每个function的详细内容见代码：`single_linked_list.c`
+
+这里特别给出单链表头插法和尾插法的代码：
+
+头插法：
+
+```c
+void head_insert_linklist(ListNode **ptr, int numbers[], int length)
+{
+    ListNode *temp = *ptr;
+    ListNode *s;
+    for (int i=0; i<length; i++){
+        s = (ListNode *)malloc(sizeof(ListNode));
+        if (s==NULL) return;
+        s->data = numbers[i];
+        s->next = temp->next;
+        temp->next = s;
+    }
+}
+```
+
+![head insert linklist function](head_insert.png)
+
+尾插法：
+
+```c
+void tail_insert_linklist(ListNode **ptr, int numbers[], int length)
+{
+    ListNode *temp = *ptr;
+    ListNode *s;
+    for (int i=0;i<length;i++){
+        s = (ListNode *)malloc(sizeof(ListNode));
+        s->data = numbers[i];
+        s->next = NULL;
+        temp->next = s;
+        temp = temp->next;
+    }
+}
+```
+
+![tail insert linklist function](tail_insert.png)
+
+###### 单链表的就地逆置
+
+```c
+void reverse_linklist(ListNode **ptr)
+{
+    ListNode *temp;
+    temp = (*ptr)->next;
+    //printf("%d\n",temp->data);
+    ListNode *r;
+    ListNode *s;
+    s = NULL;
+    while (temp != NULL){
+        r = temp->next;
+        //printf("%d ",r->data);
+        temp->next = s;
+        s = temp;
+        temp = r;
+    }
+    //printf("%d\n",temp->data);
+    (*ptr) = s;
+}
+```
+
+![单链表就地逆置](reverse_linklist.png)
 
