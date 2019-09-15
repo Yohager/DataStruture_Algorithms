@@ -33,6 +33,10 @@ void insert_elem_list(Sqlist *ptr, int i, int elem);
 void delete_elem_list(Sqlist *ptr, int i, int *elem);
 //返回list的长度
 int length_list(Sqlist List);
+//遍历list检查代码运行的结果
+void traversal_list(Sqlist List);
+//顺序表就地逆置
+void reverse_list(Sqlist *ptr);
 
 int main()
 {
@@ -50,9 +54,11 @@ int main()
         if (c=='\n') break;
     }
     printf("\n");
+    /*
     for (int j=0;j<number;j++){
         printf("%d ",temp[j]);
     }
+    */
     //上面的工作主要是从标准输入读取的一些数存入到temp数组中，为之后的list的创建做准备
     printf("\n");
     //初始化一个sqlist
@@ -63,7 +69,18 @@ int main()
     init_list(ptr);
     create_list(ptr,temp,number);
     //printf("%d",list.length);
-    printf("%d",empty_list(list));
+    //printf("%d\n",empty_list(list));
+    int *elem_p;
+    //get_elem_list(list,1,elem_p);
+    //printf("%d\n",*elem_p);
+    //printf("%d\n",locate_elem_list(list,3));
+    //insert_elem_list(ptr,2,14);
+    printf("就地逆置之前：");
+    traversal_list(list);
+    printf("\n");
+    printf("就地逆置之后：");
+    reverse_list(ptr);
+    traversal_list(list);
     return 0;
 }
 
@@ -106,7 +123,64 @@ void clean_list(Sqlist *ptr)
 //按位置查找元素
 void get_elem_list(Sqlist List, int i, int *elem)
 {
-
+    if (i<=0) return;
+    *elem = List.value[i-1];
 }
 
+//按值查找线性表中的某个元素，查找成功返回其位置，否则返回false
+int locate_elem_list(Sqlist List, int elem)
+{
+    for (int i=0;i<List.length;i++){
+        if (List.value[i] == elem) return i+1;
+    }
+    return FALSE;
+}
+
+//插入新元素
+void insert_elem_list(Sqlist *ptr, int i, int elem)
+{
+    if (i<0 || i>ptr->length || ptr->length+1 > MAX_SIZE) return;
+    for (int j=ptr->length-1;j >=i-1;j--){
+        ptr->value[j+1] = ptr->value[j];
+    }
+    ptr->value[i-1] = elem;
+    ptr->length += 1;
+}
+
+//删除线性表中某一个元素并返回其值给elem
+void delete_elem_list(Sqlist *ptr, int i, int *elem)
+{
+    if (i<0 || ptr->length == 0 || i>=ptr->length) return ;
+    *elem = ptr->value[i-1];
+    for (int j=i-1; j<ptr->length-1;j++){
+        ptr->value[j] = ptr->value[j+1];
+    }
+    ptr->value[ptr->length-1] = 0;
+    ptr->length -= 1;
+}
+
+//返回list的长度
+int length_list(Sqlist List)
+{
+    return List.length;
+}
+
+//遍历list中的元素用于检查代码运行结果
+void traversal_list(Sqlist List)
+{
+    for (int i=0;i<List.length;i++){
+        printf("%d ",List.value[i]);
+    }
+}
+
+//顺序表的就地逆置
+void reverse_list(Sqlist *ptr)
+{
+    int len = ptr->length;
+    for (int i=0;i<(len/2);i++){
+        ptr->value[i] = ptr->value[i]+ptr->value[len-i-1];
+        ptr->value[len-i-1] = ptr->value[i] - ptr->value[len-i-1];
+        ptr->value[i] = ptr->value[i] - ptr->value[len-i-1];
+    }
+}
 
