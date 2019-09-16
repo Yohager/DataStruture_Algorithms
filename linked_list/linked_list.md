@@ -2,6 +2,10 @@
 
 ----
 
+[TOC]
+
+
+
 #### 顺序表
 
 关于顺序表的知识点主要有关于顺序表的抽象数据结构以及创建，插入，删除元素，查找值以及就地逆置等。
@@ -153,4 +157,147 @@ void reverse_linklist(ListNode **ptr)
 ```
 
 ![单链表就地逆置](reverse_linklist.png)
+
+###### 几个比较有意思的问题
+
+- 查找给定位置的节点（中央，1/3）这类的位置（前提是只允许遍历一遍这个链表）
+
+解题思路：快慢指针法，定义两个指针，一个一次跳跃k个节点，一个一次跳跃一个节点，当快指针到达尾部时，慢指针指向的位置刚好是1/k处。
+
+给出代码和结果：
+
+```c
+//遍历一遍获取1/k处的节点的位置
+ListNode *k_position_node(ListNode *list)
+{
+    ListNode *fast = list;
+    ListNode *slow = list;
+    while (fast){
+        if (fast->next != NULL){
+            ListNode *temp = fast->next;
+            fast = temp->next;
+        }
+        else{
+            break;
+        }
+        slow = slow->next;
+    }
+    return slow;
+}
+```
+
+![](k_position.png)
+
+递归删除不带头结点的单链表中所有值为x的节点
+
+给出伪代码：
+
+```c
+void recursion_delete_linklist(ListNode *&first, int x)
+{
+    ListNode *p;
+    if (first == NULL) return;
+    if (first->data == x){
+        p = first;
+        first = first->next;
+        free(p);
+        recursion_delete_linklist(first,x);
+    }
+    else{
+        recursion_delete_linklist(first->next,x);
+    }
+}
+```
+
+#### 单循环链表
+
+经典约瑟夫环问题
+
+>据说著名犹太历史学家Josephus有过以下的故事:在罗马人占领乔塔帕特后，39 个犹太人与Josephus及他的朋友躲到一个洞中，39个犹太人决定宁愿死也不要被敌人抓到，于是决定了一个自杀方式，41个人排成一个圆圈，由第1个人开始报数，每报数到第3人，该人就必须自杀，然后再由下一个重新报数，直到所有人都自杀身亡为止。然而Josephus和他的朋友并不想遵从，他将朋友与自己安排在第16个与第31个位置，于是逃过了这场死亡游戏。
+
+这是这个游戏的规则，如果想要通过程序去实现这个过程，我们可以考虑使用一个单循环链表来实现这个问题，将这41个人作为这个单循环链表的每一个节点。对于每一次自杀的过程我们通过删除链表中的节点来实现。整个程序大致如下：
+
+```c
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct Node{
+    int data;
+    struct Node *next;
+}ListNode;
+
+void josephus_circle(int numbers, int k);
+
+void travesal_circle(ListNode *list);
+
+int main()
+{
+    int numbers;
+    int k;
+    printf("输入总人数和报数：");
+    scanf("%d,%d",&numbers,&k);
+    josephus_circle(numbers,k);
+    return 0;
+}
+
+void josephus_circle(int numbers, int k)
+{
+    //先构建一个单循环链表
+    ListNode *head = (ListNode *)malloc(sizeof(ListNode));
+    head->next = NULL;
+    ListNode *s = head;
+    ListNode *p;
+    for (int i=0;i<numbers;i++){
+        p = (ListNode *)malloc(sizeof(ListNode));
+        p->data = i+1;
+        p->next = s->next;
+        s->next = p;
+        //printf("%d ",p->data);
+        s=p;
+    }
+    //p->next = NULL;
+    //travesal_circle(head);
+    p->next = head->next;
+    free(head);
+    //不带头结点的循环链表建立完毕（此时我们有一个带尾节点的单循环链表）
+    //开始进行约瑟夫环算法的流程
+    /*
+    这个算法主要需要进行的是节点的删除操作
+    每隔k个人就删除一个节点
+    */
+    int length = numbers;
+    ListNode *temp_1=p->next;
+    ListNode *temp_2;
+    ListNode *q;
+    while (length>=k){
+        int count=k-1;
+        for (;count>0;count--){
+            temp_2 = temp_1;
+            temp_1 = temp_1->next;
+        }
+        printf("这一轮被删除的节点为%d\n",temp_1->data);
+        //q = (ListNode *)malloc(ListNode);
+        q = temp_1;
+        temp_2->next = temp_1->next;
+        temp_1 = temp_1->next;
+        free(q);
+        length--;
+    }
+    //free(head);
+}
+
+void travesal_circle(ListNode *list)
+{
+    ListNode *temp = list->next;
+    while (temp!=NULL){
+        printf("%d->",temp->data);
+        temp = temp->next;
+    }
+    printf("NULL");
+}
+```
+
+代码运行的结果与实际的情况相符合，每三个人自杀一人，当剩余不超过3人时结束循环，最终能够留下的两个人的编号分别为：16和31.
+
+![josephus_circle](josephus_circle.png)
 

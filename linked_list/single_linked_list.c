@@ -31,6 +31,8 @@ void delete_elem_linklist(ListNode **ptr, int i, int *elem);
 //遍历单链表中的所有元素并打印出来
 void traverse_linklist(ListNode *list);
 
+ListNode *k_position_node(ListNode *list);
+
 int main()
 {
     int *elem_p;
@@ -47,6 +49,8 @@ int main()
     traverse_linklist(list);
     insert_elem_linklist(ptr,4,21);
     traverse_linklist(list);
+    insert_elem_linklist(ptr,5,21);
+    traverse_linklist(list);
     int count = length_linklist(list);
     printf("单链表的长度为%d\n",count);
     //get_elem_linklist(list,2,elem_p);
@@ -61,11 +65,14 @@ int main()
     int counts = 4;
     head_insert_linklist(ptr,numbers,counts);
     */
-    printf("就地逆置前：");
-    traverse_linklist(list);
-    reverse_linklist(ptr);
-    printf("就地逆置后：");
-    traverse_linklist_reverse(list);
+    //printf("就地逆置前：");
+    //traverse_linklist(list);
+    //reverse_linklist(ptr);
+    //printf("就地逆置后：");
+    //traverse_linklist_reverse(list);
+    ListNode *k_postion = (ListNode *)malloc(sizeof(ListNode));
+    k_postion = k_position_node(list);
+    printf("%d\n",k_postion->data);
     return 0;
 }
 
@@ -233,3 +240,23 @@ void traverse_linklist_reverse(ListNode *list)
     }
     printf("NULL\n");
 }
+
+//遍历一遍获取1/k处的节点的位置
+ListNode *k_position_node(ListNode *list)
+{
+    //将fast和slow指针都先指向第一个有数值的节点
+    ListNode *fast = list;
+    ListNode *slow = list;
+    while (fast){
+        if (fast->next != NULL){
+            ListNode *temp = fast->next;
+            fast = temp->next;
+        }
+        else{
+            break;
+        }
+        slow = slow->next;
+    }
+    return slow;
+}
+

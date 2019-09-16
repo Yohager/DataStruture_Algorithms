@@ -35,7 +35,7 @@ review for some basic knowledge of data structure and algorithms
 
 单链表：头插入头删除（链栈）
 
-带尾指针单循环链表——尾插入尾删除——链队列
+带尾指针单循环链表——尾插入头删除——链队列
 
 双端顺序栈（栈的push1和push2以及pop1和pop2）
 
