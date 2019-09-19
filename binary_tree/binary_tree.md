@@ -23,8 +23,6 @@ void is_empty_tree(BTNode *root);
 BTNode *get_node_position(BTNode *root, int elem);
 //返回这棵树的深度
 int depth_of_tree(BTNode *root);
-//修改某个节点的值
-void assign_node_value(BTNode **rootptr, BTNode *cur_node, int elem);
 //计算二叉树的叶子节点个数
 int numbers_of_leaves(BTNode *root);
 ```
