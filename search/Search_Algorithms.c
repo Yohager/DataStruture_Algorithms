@@ -3,8 +3,8 @@
 二分查找
 插值查找
 斐波那契查找
-树表查找
-分块查找
+树表查找（树表的代码在：binary_search_tree.c文件中）
+分块查找（分块查找的代码在：index_search.c文件中）
 哈希查找
 */
 #include<stdio.h>
@@ -17,6 +17,7 @@ int *binary_search(int *numbers, int count, int target);
 int *interpolation_search(int *numbers, int target, int low, int high);
 void Fibonacci(int *F,int size);
 int *Fibonacci_search(int *numbers, int count, int target);
+
 
 int main()
 {

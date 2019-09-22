@@ -181,6 +181,108 @@ int *Fibonacci_search(int *numbers, int count, int target)
 
    时间复杂度：$O(\log_2 N)$.（最坏的情况可能是$O(N)$.）
 
+   给出二叉搜索树实现的代码：
+
+   ```c
+   /*
+   二叉搜索树进行搜索
+   */
+   #include<stdio.h>
+   #include<stdlib.h>
+   
+   typedef struct tree_node{
+       int value;
+       struct tree_node *lchild;
+       struct tree_node *rchild;
+   }TreeNode;
+   
+   TreeNode *BST_insert(TreeNode *root, int number);
+   void LDR(TreeNode *root);
+   TreeNode *BST_search_elem(TreeNode *root, int elem);
+   
+   
+   int main()
+   {
+       //首先构造根节点
+       TreeNode *root;
+       root = (TreeNode *)malloc(sizeof(TreeNode));
+       root->value = 0;
+       root->lchild = NULL;
+       root->rchild = NULL;
+       root = BST_insert(root,12);
+       root = BST_insert(root,3);
+       root = BST_insert(root,41);
+       root = BST_insert(root,7);
+       root = BST_insert(root,18);
+       LDR(root);
+       printf("\n");
+       TreeNode *result;
+       result = BST_search_elem(root,7);
+       if (result != NULL) printf("%d\n",result->value);
+       else printf("can not find this element!");
+       return 0;
+   }
+   
+   TreeNode *BST_insert(TreeNode *root, int number)
+   {
+       if (root->value == 0){
+           root->value = number;
+           return root;
+       }
+       TreeNode *temp = (TreeNode *)malloc(sizeof(TreeNode));
+       temp->value = number;
+       temp->lchild = NULL;
+       temp->rchild = NULL;
+       TreeNode *p = root;
+       while (p != NULL){
+           if (number < p->value){
+               if (p->lchild == NULL){
+                   p->lchild = temp;
+                   break;
+               }
+               else{
+                   p = p->lchild;
+               }
+           }
+           else if (number > p->value){
+               if (p->rchild == NULL){
+                   p->rchild = temp;
+                   break;
+               }
+               else{
+                   p = p->rchild;
+               }
+           }
+       }
+       return root;
+   }
+   
+   void LDR(TreeNode *root)
+   {
+       if (root == NULL) return;
+       LDR(root->lchild);
+       printf("%d->",root->value);
+       LDR(root->rchild);
+   }
+   
+   TreeNode *BST_search_elem(TreeNode *root, int elem)
+   {
+       TreeNode *temp = root;
+       while (temp != NULL){
+           if (temp->value == elem){
+               return temp;
+           }
+           else if (elem < temp->value){
+               temp = temp->lchild;
+           }
+           else if (elem > temp->value){
+               temp = temp->rchild;
+           }
+       }
+       return NULL;
+   }
+   ```
+
 2. 2-3 Tree（平衡查找树之2-3查找树）
 
 3. Red-Black Tree（平衡查找树之红黑树）
@@ -192,4 +294,15 @@ int *Fibonacci_search(int *numbers, int count, int target)
 二叉查找树平均查找性能不错，为$O(\log_2N)$，但是最坏情况会退化为$O(N)$ 。在二叉查找树的基础上进行优化，我们可以使用平衡查找树。平衡查找树中的2-3查找树，这种数据结构在插入之后能够进行自平衡操作，从而保证了树的高度在一定的范围内进而能够保证最坏情况下的时间复杂度。但是2-3查找树实现起来比较困难，红黑树是2-3树的一种简单高效的实现，他巧妙地使用颜色标记来替代2-3树中比较难处理的3-node节点问题。红黑树是一种比较高效的平衡查找树，应用非常广泛，很多编程语言的内部实现都或多或少的采用了红黑树。
 
 ##### 分块查找
+
+分块查找又称为索引顺序查找，它是顺序查找的一种改进方法。
+
+**算法思想**：将n个元素“按块间有序”划分为m个块（m<=n），每一块内部的元素不一定保证有序，但块间必须有序。
+
+**算法流程**：
+
+1. 先选取各个块中最大的关键字构成一个索引表
+2. 查找分为两个部分：先对索引表进行二分查找或者顺序查找，以确定待查记录在哪一块中；然后在已确定的块中使用顺序法进行查找。
+
+##### 哈希查找
 
